@@ -13,8 +13,8 @@ echo "csrutil disable; shutdown -r now;"
 echo 
 echo "Once macOS has booted, open Applications > Utilities > Terminal and run these commands";
 sudo nvram boot-args="-v"; \
-killall diskspaced; \
-killall dynamic_pager; \
+sudo killall diskspaced; \
+sudo killall dynamic_pager; \
 sudo defaults write com.apple.diskspaced minFreeSpace 0.5; \
 sudo launchctl unload -w /System/Library/LaunchAgents/com.apple.diskspaced.plist; \
 sudo pmset -a hibernatemode 0; \
