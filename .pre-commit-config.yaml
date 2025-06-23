@@ -1,0 +1,45 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0 # Use the latest version
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-toml
+    -   id: check-merge-conflict
+    -   id: debug-statements
+
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version. Must be kept in sync with pyproject.toml or use `python -m ruff --version`
+    rev: v0.5.5 # Check for the latest ruff-pre-commit tag
+    hooks:
+    -   id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        # Respects pyproject.toml settings by default
+    -   id: ruff-format
+        # Respects pyproject.toml settings by default
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.0 # Check for the latest mypy version tag for pre-commit
+    hooks:
+    -   id: mypy
+        args: [--strict] # Or use args from pyproject.toml, e.g. by not specifying args here
+        # Mypy's pre-commit hook respects pyproject.toml by default if args are not overly specified.
+        # Ensure your mypy config in pyproject.toml is what you want for pre-commit runs.
+        # Add 'additional_dependencies' if your project has type stubs or plugins mypy needs.
+        # example: additional_dependencies: ['types-requests']
+        # Pass --python-version from pyproject.toml or let mypy infer
+        # args: ["--python-version=${PYTHON_VERSION_FROM_PYPROJECT}"] # if needed
+        # It's often better to let mypy use its config from pyproject.toml
+        # Forcing args here can override that.
+        # If pyproject.toml [tool.mypy] is well-defined, empty 'args' or minimal args are fine.
+        # The default behavior of the hook is to run `mypy` which should pick up `pyproject.toml`.
+        # Consider adding `verbose: true` for debugging.
+        pass_filenames: false # Mypy works best when it analyzes all files.
+        # files: ^src/ # Optionally scope mypy to specific directories if needed
+        # exclude: ^tests/ # If you don't want to type-check tests with pre-commit
+# To install the hooks: pre-commit install
+# To run against all files: pre-commit run --all-files
+# To update hooks: pre-commit autoupdate
