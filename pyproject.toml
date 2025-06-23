@@ -1,0 +1,124 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "macos-surgery"
+dynamic = ["version"]
+description = "Various personal macOS things"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT" # Confirmed from existing LICENSE file
+authors = [
+  { name = "MacOS Surgery Contributor", email = "contributor@example.com" }, # TODO: User should replace with actual author info
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License", # Corresponds to the existing LICENSE file.
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: MacOS",
+  "Operating System :: MacOS :: MacOS X",
+  "Topic :: System :: Operating System", # More generic but valid
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+
+dependencies = [
+  # Add runtime dependencies here if any in the future
+]
+
+[project.urls]
+Homepage = "https://github.com/example-user/macos-surgery" # TODO: User should replace with actual repo URL
+Repository = "https://github.com/example-user/macos-surgery" # TODO: User should replace with actual repo URL
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.envs.default]
+dev-mode = true # Explicitly enable development mode
+dependencies = [
+  "ruff",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+  "pre-commit", # For commit hooks
+  "uv", # Adding uv as a dev dependency
+]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP", # pyupgrade
+    "ANN",# flake8-annotations
+    "ASYNC", # flake8-async
+    "S",  # flake8-bandit
+    "BLE", # flake8-blind-except
+    "A", # flake8-builtins
+    "COM", # flake8-commas
+    "PT", # flake8-pytest-style
+]
+ignore = ["COM812"] # Disable conflicting comma rule
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"] # Ignore assert statements in test files
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true # Can be helpful initially
+# More strict settings can be added later:
+# disallow_untyped_defs = true
+# disallow_any_unimported = true
+
+[tool.hatch.scripts]
+# General development scripts
+lint = "ruff check . && ruff format ."
+test = "pytest -v"
+check = "mypy src tests" # Mypy for type checking
+cov = "pytest --cov-report term-missing --cov=src/macos_surgery tests/"
+all-checks = [
+    "lint",
+    "cov", # Using cov here to include coverage in all-checks
+    "check",
+]
+
+# Build and environment management
+build = "hatch build"
+clean-build = "rm -rf dist *.egg-info"
+clean-py = "find . -name '*.pyc' -exec rm -f {} + && find . -name '*.pyo' -exec rm -f {} + && find . -name '*~' -exec rm -f {} + && find . -name '__pycache__' -exec rm -rf {} +"
+clean-test = "rm -rf .pytest_cache .coverage htmlcov"
+clean-envs = "hatch env prune"
+clean = [
+    "clean-build",
+    "clean-py",
+    "clean-test",
+    "clean-envs",
+    "rm -rf .mypy_cache",
+]
+
+# Default environment for hatch shell will use 'default' defined under [tool.hatch.envs.default]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --cov=src/macos_surgery --cov-report=term-missing" # Basic pytest options, adjust as needed
+testpaths = [
+    "tests",
+]
